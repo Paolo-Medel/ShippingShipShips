@@ -1,4 +1,4 @@
-import { getDocks } from "./database.js";
+import { getDocks, getHaulers } from "./database.js";
 
 export const DockList = () => {
   const docks = getDocks();
@@ -6,10 +6,41 @@ export const DockList = () => {
   let docksHTML = "<ul>";
 
   for (const dock of docks) {
-    docksHTML += `<li>${dock.location}</li>`;
+    docksHTML += `<li data-type="dock" data-id="${dock.id}" data-location="${dock.location}">${dock.location}</li>`;
   }
 
   docksHTML += "</ul>";
 
   return docksHTML;
 };
+
+document.addEventListener("click", (clickEvent) => {
+  const itemClicked = clickEvent.target;
+
+  if (itemClicked.dataset.type === "dock") {
+    const dockId = itemClicked.dataset.id;
+    const dockLocation = itemClicked.dataset.location;
+    const haulers = getHaulers();
+    let dockedHaulers = "";
+
+    for (const hauler of haulers) {
+      if (parseInt(dockId) === hauler.dockId) {
+        dockedHaulers += hauler.name + " ";
+      }
+    }
+
+    if (dockedHaulers != "") {
+      window.alert(
+        `The ${dockLocation} dock is currently unloading ${dockedHaulers}`
+      );
+    } else {
+      window.alert(`The ${dockLocation} dock is currently unloading nothing`);
+    }
+  }
+});
+
+// } else {
+//     window.alert(`The ${dockLocation} dock is currently unloading nothing`);
+//   }
+
+//   if (parseInt(dockId) === hauler.dockId) {
