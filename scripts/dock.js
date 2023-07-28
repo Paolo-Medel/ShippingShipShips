@@ -2,6 +2,11 @@ import { getDocks, getHaulers } from "./database.js";
 
 export const DockList = () => {
   const docks = getDocks();
+  docks.sort(function (a, b) {
+    var textA = a.location.toUpperCase();
+    var textB = b.location.toUpperCase();
+    return textA < textB ? -1 : textA > textB ? 1 : 0;
+  });
 
   let docksHTML = "<ul>";
 
